@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-app.use('view engine', 'ejs');
+app.set('view engine', 'ejs');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/shortenURL');
@@ -14,8 +14,8 @@ db.once('open', function()
     console.log('[Mongoose] Connection Success');
 })
 
-app.get('/', (req, res) => {
-    res.render('views/home')
+app.get('/url', (req, res) => {
+    res.render('pages/home');
 })
 
 app.listen('3000', () => {
