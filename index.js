@@ -57,7 +57,7 @@ app.post('/url', async (req, res) => {
 })
 
 app.get('*', function(req, res){
-    res.status(404).send('what???');
+    res.status(404).send('404! Couldn\'t find what you were looking for!');
 });
 
 app.listen('3001', () => {
