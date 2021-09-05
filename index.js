@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
+const engine = require('ejs-mate');
+
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
+app.engine('ejs', engine);
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/shortenURL', {useNewUrlParser: true});
@@ -12,16 +15,32 @@ db.once('open', function()
 {
     console.log('[Mongoose] Connection Success');
 })
+const URL = require('./models/Url');
 
 const path = require('path');
 app.set('views', path.join(__dirname, 'views'))
 
-const URL = require('./models/Url');
-
 const validUrl = require('valid-url');
 
+// get routes
+
 app.get('/url', (req, res) => {
-    res.render('pages/home');
+    res.render('pages/home', { who: 'Home' });
+})
+
+app.get('/url/dashboard', async (req, res) => {
+    const userLinks = await URL.find({});
+    res.render('pages/dashboard', { who: 'Dashboard', userLinks });
+})
+
+app.get('/url/new', (req, res) => {
+    res.render('pages/new', { who: 'New URL' })
+})
+
+app.get('/url/:id/details', async (req, res) => {
+    const { id } = req.params;
+    const foundURL = await URL.findById(id);
+    res.render('pages/details', { who: 'Edit URL', foundURL })
 })
 
 app.get('/url/:id', async (req, res) => 
@@ -41,10 +60,12 @@ app.get('/url/:id', async (req, res) =>
     }
 })
 
+// post routes
+
 app.post('/url', async (req, res) => {
     console.log(req.body);
 
-    if(validUrl.isUri(req.body.url))
+    if(validUrl.isWebUri(req.body.url))
     {
         const newURL = new URL({url: req.body.url});
         await newURL.save();
@@ -52,14 +73,14 @@ app.post('/url', async (req, res) => {
     }
     else
     {
-        res.send('Invalid URL! Please refresh and try again...')
+        res.redirect('/url/new');
     }
 })
 
-app.get('*', function(req, res){
-    res.status(404).send('404! Couldn\'t find what you were looking for!');
-});
+// port listen
 
-app.listen('3001', () => {
-    console.log('[Express] Listening on PORT 3000');
+const PORT = 3000;
+
+app.listen(PORT, () => {
+    console.log(`[Express] Listening on PORT ${PORT}`);
 })
