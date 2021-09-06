@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') -%>
+<h1 class="m-5">Welcome to your dashboard...</h1>
+<br>
+<div class="w-75 m-5 align-middle">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>urlShorten Link</th>
+                <th>Functions</th>
+            </tr>
+        </thead>
+        <% let counter = 1 %>
+        <% for (userLink of userLinks) { %>
+            <tbody>
+                <tr class="align-middle h4">
+                    <td><%= counter %></td>
+                    <td><a href="http://localhost:3000/url/<%=userLink._id%>" target="_blank">http://localhost:3000/url/<%=userLink._id%></a></td>
+                    <td>
+                        <a href="http://localhost:3000/url/<%=userLink._id%>/details"><button type="button" class="btn btn-lg btn-outline-secondary">Details</button></a>
+                    </td>
+                </tr>
+            </tbody>
+            <% counter++ %>
+        <% } %>
+    </table>
+</div>

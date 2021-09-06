@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate') -%>
+<div class="col-6 offset-3 mt-5">
+    <h1>Create a new short URL</h1>
+    <form action="/url" class="newurl mt-5" method="POST" novalidate>
+        <label for="url">Enter your URL: </label>
+        <input type="url" name="url" id="url" placeholder="https://example.com">
+        <button>Submit</button>
+    </form>
+</div>
